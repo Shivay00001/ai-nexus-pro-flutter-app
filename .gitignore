@@ -1,0 +1,90 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configurations and tasks used when running
+# and debugging the project.
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+__metadata
+build/
+
+# Android related
+**/android/app/key.properties
+**/android/app/local.properties
+**/android/app/src/main/res/drawable-*/
+**/android/app/src/main/res/mipmap-*/
+**/android/app/src/main/res/values/strings.xml
+**/android/local.properties
+**/android/key.properties
+**/android/app/*.jks
+**/android/app/*.keystore
+**/android/app/*.google-services.json
+
+# iOS related
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Pods/
+**/ios/Runner.xcworkspace/xcuserdata/
+**/ios/.generated/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GoogleService-Info.plist
+
+# macOS related
+**/macos/Flutter/ephemeral/
+**/macos/Pods/
+**/macos/Runner.xcworkspace/xcuserdata/
+**/macos/ServiceDefinitions.json
+**/macos/Runner/GoogleService-Info.plist
+
+# Symbolication related
+app.*.symbols
+
+# Executable distributions
+*.apk
+*.aab
+*.app
+*.ipa
+
+# External package directories
+**/android/sdk/
+**/ios/Pods/
+
+# Temporary and generated files
+**/*.freezed.dart
+**/*.g.dart
+**/*.gr.dart
+**/*.mocks.dart
+
+# Build Runner
+.dart_tool/build/
+
+# Extraction temp
+temp_unzip/
+pub_error.txt
+pub_log.txt
