@@ -1,12 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/network/api_client.dart';
+import '../../../core/services/storage_service.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 
+// Api Client Provider
+final apiClientProvider = Provider((ref) => ApiClient());
+
 // Repository Provider
-final authRepositoryProvider = Provider((ref) => AuthRepositoryImpl());
+final authRepositoryProvider = Provider((ref) {
+  final apiClient = ref.read(apiClientProvider);
+  return AuthRepositoryImpl(apiClient);
+});
 
 // Use Case Providers
 final loginUseCaseProvider = Provider((ref) {
@@ -126,6 +134,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true);
     
     await logoutUseCase();
+    await StorageService.deleteToken();
     
     state = AuthState();
   }

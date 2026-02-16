@@ -1,10 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/network/api_client.dart';
 import '../../domain/entities/achievement.dart';
 import '../../domain/usecases/get_achievements_usecase.dart';
 import '../../data/repositories/gamification_repository_impl.dart';
+import '../../../features/auth/presentation/providers/auth_provider.dart';
 
 // Repository Provider
-final gamificationRepositoryProvider = Provider((ref) => GamificationRepositoryImpl());
+final gamificationRepositoryProvider = Provider((ref) {
+  final apiClient = ref.read(apiClientProvider);
+  return GamificationRepositoryImpl(apiClient);
+});
 
 // Use Case Provider
 final getAchievementsUseCaseProvider = Provider((ref) {

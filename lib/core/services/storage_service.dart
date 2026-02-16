@@ -1,26 +1,28 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../constants/api_constants.dart';
 
 class StorageService {
   static late Box _authBox;
   static late Box _settingsBox;
+  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   static Future<void> init() async {
     _authBox = await Hive.openBox(StorageConstants.authBox);
     _settingsBox = await Hive.openBox(StorageConstants.settingsBox);
   }
 
-  // Auth Methods
+  // Auth Methods (Securely stored)
   static Future<void> saveToken(String token) async {
-    await _authBox.put(AppConstants.tokenKey, token);
+    await _secureStorage.write(key: AppConstants.tokenKey, value: token);
   }
 
-  static String? getToken() {
-    return _authBox.get(AppConstants.tokenKey);
+  static Future<String?> getToken() async {
+    return await _secureStorage.read(key: AppConstants.tokenKey);
   }
 
   static Future<void> deleteToken() async {
-    await _authBox.delete(AppConstants.tokenKey);
+    await _secureStorage.delete(key: AppConstants.tokenKey);
   }
 
   // Theme Methods
@@ -45,5 +47,6 @@ class StorageService {
   static Future<void> clearAll() async {
     await _authBox.clear();
     await _settingsBox.clear();
+    await _secureStorage.deleteAll();
   }
 }

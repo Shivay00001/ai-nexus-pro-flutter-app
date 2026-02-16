@@ -1,10 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/network/api_client.dart';
 import '../../domain/entities/learning_path.dart';
 import '../../domain/usecases/get_personalized_path_usecase.dart';
 import '../../data/repositories/learning_path_repository_impl.dart';
+import '../../../features/auth/presentation/providers/auth_provider.dart';
 
 // Repository Provider
-final learningPathRepositoryProvider = Provider((ref) => LearningPathRepositoryImpl());
+final learningPathRepositoryProvider = Provider((ref) {
+  final apiClient = ref.read(apiClientProvider);
+  return LearningPathRepositoryImpl(apiClient);
+});
 
 // Use Case Provider
 final getPersonalizedPathUseCaseProvider = Provider((ref) {

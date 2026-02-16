@@ -1,10 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/network/api_client.dart';
 import '../../domain/entities/dashboard_data.dart';
 import '../../domain/usecases/get_dashboard_data_usecase.dart';
 import '../../data/repositories/dashboard_repository_impl.dart';
+import '../../../features/auth/presentation/providers/auth_provider.dart';
 
 // Repository Provider
-final dashboardRepositoryProvider = Provider((ref) => DashboardRepositoryImpl());
+final dashboardRepositoryProvider = Provider((ref) {
+  final apiClient = ref.read(apiClientProvider);
+  return DashboardRepositoryImpl(apiClient);
+});
 
 // Use Case Provider
 final getDashboardDataUseCaseProvider = Provider((ref) {

@@ -1,10 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/network/api_client.dart';
 import '../../domain/entities/voice_validation_result.dart';
 import '../../domain/usecases/validate_answer_usecase.dart';
 import '../../data/repositories/voice_validation_repository_impl.dart';
+import '../../../features/auth/presentation/providers/auth_provider.dart';
 
 // Repository Provider
-final voiceValidationRepositoryProvider = Provider((ref) => VoiceValidationRepositoryImpl());
+final voiceValidationRepositoryProvider = Provider((ref) {
+  final apiClient = ref.read(apiClientProvider);
+  return VoiceValidationRepositoryImpl(apiClient);
+});
 
 // Use Case Provider
 final validateAnswerUseCaseProvider = Provider((ref) {

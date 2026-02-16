@@ -1,11 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/network/api_client.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/usecases/send_message_usecase.dart';
 import '../../data/repositories/ai_tutor_repository_impl.dart';
+import '../../../features/auth/presentation/providers/auth_provider.dart';
 import 'package:uuid/uuid.dart';
 
 // Repository Provider
-final aiTutorRepositoryProvider = Provider((ref) => AiTutorRepositoryImpl());
+final aiTutorRepositoryProvider = Provider((ref) {
+  final apiClient = ref.read(apiClientProvider);
+  return AiTutorRepositoryImpl(apiClient);
+});
 
 // Use Case Provider
 final sendMessageUseCaseProvider = Provider((ref) {

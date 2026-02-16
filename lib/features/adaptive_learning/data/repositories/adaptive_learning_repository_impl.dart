@@ -1,39 +1,30 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
+import '../../../../core/network/api_client.dart';
+import '../../../../core/constants/api_constants.dart';
 import '../../domain/entities/skill_mastery.dart';
 import '../../domain/repositories/adaptive_learning_repository.dart';
+import '../models/skill_mastery_model.dart';
 
 class AdaptiveLearningRepositoryImpl implements AdaptiveLearningRepository {
+  final ApiClient _apiClient;
+
+  AdaptiveLearningRepositoryImpl(this._apiClient);
+
   @override
   Future<Either<Failure, List<SkillMastery>>> getStudentMastery() async {
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
-      return const Right([
-        SkillMastery(
-          skillId: 's1',
-          skillName: 'Quantum Fundamentals',
-          masteryScore: 0.85,
-          level: MasteryLevel.advanced,
-          strengthAreas: ['Superposition', 'Wave-Particle Duality'],
-          weakAreas: ['Entanglement Math'],
-        ),
-        SkillMastery(
-          skillId: 's2',
-          skillName: 'Mathematics for Physics',
-          masteryScore: 0.60,
-          level: MasteryLevel.intermediate,
-          strengthAreas: ['Linear Algebra'],
-          weakAreas: ['Partial Differential Equations'],
-        ),
-        SkillMastery(
-          skillId: 's3',
-          skillName: 'Scientific Reasoning',
-          masteryScore: 0.40,
-          level: MasteryLevel.novice,
-          strengthAreas: ['Hypothesis Testing'],
-          weakAreas: ['Experimental Design'],
-        ),
-      ]);
+      final response = await _apiClient.get(ApiConstants.performanceMetrics);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        final List<SkillMastery> mastery = data
+            .map((e) => SkillMasteryModel.fromJson(e).toEntity())
+            .toList();
+        return Right(mastery);
+      } else {
+        return const Left(ServerFailure('Failed to fetch student mastery'));
+      }
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

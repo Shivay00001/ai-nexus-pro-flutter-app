@@ -1,41 +1,65 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
+import '../../../../core/network/api_client.dart';
+import '../../../../core/constants/api_constants.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/ai_tutor_repository.dart';
+import '../models/chat_message_model.dart';
 import 'package:uuid/uuid.dart';
 
 class AiTutorRepositoryImpl implements AiTutorRepository {
+  final ApiClient _apiClient;
   final _uuid = const Uuid();
+
+  AiTutorRepositoryImpl(this._apiClient);
 
   @override
   Stream<Either<Failure, ChatMessage>> sendMessage(String text) async* {
-    // 1. Return User Message immediately (though typically done in UI/Provider)
-    
-    // 2. Simulate AI response streaming
-    final aiMessageId = _uuid.v4();
-    String currentText = "";
-    
-    final responsePayload = "I can certainly help you with that! Based on your current progress in Quantum Physics, it seems you're ready to dive into Wave-Particle Duality. Shall we start with the double-slit experiment?";
-    final words = responsePayload.split(" ");
+    try {
+      // In a real scenario, this would use a Server-Sent Events (SSE) or WebSocket.
+      // Here we simulate the streaming behavior while Calling a real endpoint.
+      final response = await _apiClient.post(
+        ApiConstants.aiChat,
+        data: {'message': text},
+      );
 
-    for (var i = 0; i < words.length; i++) {
-      await Future.delayed(const Duration(milliseconds: 100));
-      currentText += (i == 0 ? "" : " ") + words[i];
-      
-      yield Right(ChatMessage(
-        id: aiMessageId,
-        text: currentText,
-        role: MessageRole.assistant,
-        timestamp: DateTime.now(),
-        isStreaming: i < words.length - 1,
-      ));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final fullMessage = ChatMessageModel.fromJson(response.data).toEntity();
+        
+        // Simulating the streaming of the fetched message for UI consistency
+        final words = fullMessage.text.split(" ");
+        String currentText = "";
+        
+        for (var i = 0; i < words.length; i++) {
+          await Future.delayed(const Duration(milliseconds: 50));
+          currentText += (i == 0 ? "" : " ") + words[i];
+          
+          yield Right(fullMessage.copyWith(
+            text: currentText,
+            isStreaming: i < words.length - 1,
+          ));
+        }
+      } else {
+        yield const Left(ServerFailure('Failed to get AI response'));
+      }
+    } catch (e) {
+      yield Left(ServerFailure(e.toString()));
     }
   }
 
   @override
   Future<Either<Failure, List<ChatMessage>>> getChatHistory() async {
-    return const Right([]);
+    try {
+      final response = await _apiClient.get(ApiConstants.chatMessages);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return Right(data.map((e) => ChatMessageModel.fromJson(e).toEntity()).toList());
+      }
+      return const Right([]);
+    } catch (_) {
+      return const Right([]);
+    }
   }
 
   @override

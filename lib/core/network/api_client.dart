@@ -17,8 +17,8 @@ class ApiClient {
 
     _dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
-          final token = StorageService.getToken();
+        onRequest: (options, handler) async {
+          final token = await StorageService.getToken();
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }

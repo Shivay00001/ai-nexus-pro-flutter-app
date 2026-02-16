@@ -1,28 +1,35 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
+import '../../../../core/network/api_client.dart';
+import '../../../../core/constants/api_constants.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
+  final ApiClient _apiClient;
+
+  AuthRepositoryImpl(this._apiClient);
+
   @override
   Future<Either<Failure, User>> login({
     required String email,
     required String password,
   }) async {
     try {
-      // Mock login for now
-      await Future.delayed(const Duration(seconds: 1));
-      if (email == 'student@example.com' && password == 'password') {
-        return Right(User(
-          id: '1',
-          email: email,
-          name: 'Demo Student',
-          role: 'student',
-          createdAt: DateTime.now(),
-          isEmailVerified: true,
-        ));
+      final response = await _apiClient.post(
+        ApiConstants.login,
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final userModel = UserModel.fromJson(response.data['user']);
+        return Right(userModel.toEntity());
       } else {
-        return const Left(AuthenticationFailure('Invalid email or password'));
+        return const Left(AuthenticationFailure('Login failed'));
       }
     } catch (e) {
       return Left(ServerFailure(e.toString()));
@@ -36,20 +43,36 @@ class AuthRepositoryImpl implements AuthRepository {
     required String name,
     required String role,
   }) async {
-    // Mock register
-    return Right(User(
-      id: '2',
-      email: email,
-      name: name,
-      role: role,
-      createdAt: DateTime.now(),
-      isEmailVerified: false,
-    ));
+    try {
+      final response = await _apiClient.post(
+        ApiConstants.register,
+        data: {
+          'email': email,
+          'password': password,
+          'name': name,
+          'role': role,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final userModel = UserModel.fromJson(response.data['user']);
+        return Right(userModel.toEntity());
+      } else {
+        return const Left(AuthenticationFailure('Registration failed'));
+      }
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, void>> logout() async {
-    return const Right(null);
+    try {
+      await _apiClient.post(ApiConstants.logout);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
   }
 
   @override

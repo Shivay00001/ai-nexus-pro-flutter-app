@@ -1,41 +1,30 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
+import '../../../../core/network/api_client.dart';
+import '../../../../core/constants/api_constants.dart';
 import '../../domain/entities/offline_ai_model.dart';
 import '../../domain/repositories/offline_ai_repository.dart';
+import '../models/offline_ai_model_model.dart';
 
 class OfflineAiRepositoryImpl implements OfflineAiRepository {
+  final ApiClient _apiClient;
+
+  OfflineAiRepositoryImpl(this._apiClient);
+
   @override
   Future<Either<Failure, List<OfflineAiModel>>> getAvailableModels() async {
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
-      return const Right([
-        OfflineAiModel(
-          id: 'm1',
-          name: 'Llama-3-8B (Quantized)',
-          description: 'Optimized for mobile text inference and tutor assistance.',
-          sizeInMB: 2048,
-          isDownloaded: true,
-          downloadProgress: 1.0,
-        ),
-        OfflineAiModel(
-          id: 'm2',
-          name: 'MobileNet-V3',
-          description: 'On-device vision model for image-based problem solving.',
-          sizeInMB: 15.4,
-          isDownloaded: false,
-          downloadProgress: 0.0,
-        ),
-        OfflineAiModel(
-          id: 'm3',
-          name: 'Whisper-Tiny',
-          description: 'Local speech-to-text model for offline voice validation.',
-          sizeInMB: 75,
-          isDownloaded: false,
-          downloadProgress: 0.0,
-        ),
-      ]);
+      // Fetch available models from a central registry or metadata endpoint
+      final response = await _apiClient.get('/ai/models/available'); 
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return Right(data.map((e) => OfflineAiModelModel.fromJson(e).toEntity()).toList());
+      } else {
+        return const Left(ServerFailure('Failed to fetch available AI models'));
+      }
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+       return Left(ServerFailure(e.toString()));
     }
   }
 
