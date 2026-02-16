@@ -21,11 +21,11 @@ class SkillMasteryModel with _$SkillMasteryModel {
 
 extension SkillMasteryModelX on SkillMasteryModel {
   SkillMastery toEntity() => SkillMastery(
-        skillId: skillId,
-        skillName: skillName,
-        masteryScore: masteryScore,
-        level: level,
-        strengthAreas: strengthAreas,
-        weakAreas: weakAreas,
+        skillId: this.skillId,
+        skillName: this.skillName,
+        masteryScore: this.masteryScore,
+        level: this.level,
+        strengthAreas: this.strengthAreas,
+        weakAreas: this.weakAreas,
       );
 }

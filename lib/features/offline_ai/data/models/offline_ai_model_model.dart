@@ -22,12 +22,12 @@ class OfflineAiModelModel with _$OfflineAiModelModel {
 
 extension OfflineAiModelModelX on OfflineAiModelModel {
   OfflineAiModel toEntity() => OfflineAiModel(
-        id: id,
-        name: name,
-        description: description,
-        sizeInMB: sizeInMB,
-        isDownloaded: isDownloaded,
-        downloadProgress: downloadProgress,
-        localPath: localPath,
+        id: this.id,
+        name: this.name,
+        description: this.description,
+        sizeInMB: this.sizeInMB,
+        isDownloaded: this.isDownloaded,
+        downloadProgress: this.downloadProgress,
+        localPath: this.localPath,
       );
 }

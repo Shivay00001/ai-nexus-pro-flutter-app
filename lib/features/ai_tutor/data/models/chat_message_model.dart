@@ -34,12 +34,12 @@ class MessageAttachmentModel with _$MessageAttachmentModel {
 
 extension ChatMessageModelX on ChatMessageModel {
   ChatMessage toEntity() => ChatMessage(
-        id: id,
-        text: text,
-        role: role,
-        timestamp: timestamp,
-        attachments: attachments?.map((e) => e.toEntity()).toList(),
-        isStreaming: isStreaming,
+        id: this.id,
+        text: this.text,
+        role: this.role,
+        timestamp: this.timestamp,
+        attachments: this.attachments?.map((e) => e.toEntity()).toList(),
+        isStreaming: this.isStreaming,
       );
 }
 

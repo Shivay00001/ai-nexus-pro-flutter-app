@@ -35,21 +35,21 @@ class RecentActivityModel with _$RecentActivityModel {
 
 extension DashboardDataModelX on DashboardDataModel {
   DashboardData toEntity() => DashboardData(
-        completedCourses: completedCourses,
-        totalLessons: totalLessons,
-        learningProgress: learningProgress,
-        totalXP: totalXP,
-        currentStreak: currentStreak,
-        currentRank: currentRank,
-        recentActivities: recentActivities.map((e) => e.toEntity()).toList(),
+        completedCourses: this.completedCourses,
+        totalLessons: this.totalLessons,
+        learningProgress: this.learningProgress,
+        totalXP: this.totalXP,
+        currentStreak: this.currentStreak,
+        currentRank: this.currentRank,
+        recentActivities: this.recentActivities.map((e) => e.toEntity()).toList(),
       );
 }
 
 extension RecentActivityModelX on RecentActivityModel {
   RecentActivity toEntity() => RecentActivity(
-        id: id,
-        title: title,
-        type: type,
-        timestamp: timestamp,
+        id: this.id,
+        title: this.title,
+        type: this.type,
+        timestamp: this.timestamp,
       );
 }
