@@ -1,6 +1,6 @@
-# IndividyaBot - AI EdTech Pro
+# Vidya.Edu - AI EdTech Pro
 
-IndividyaBot is a premium, AI-powered EdTech platform built with Flutter and Clean Architecture. It provides a personalized learning experience with an AI Tutor, interactive learning paths, gamification, and advanced AI features like voice validation and knowledge mastery tracing.
+Vidya.Edu is a premium, AI-powered EdTech platform built with Flutter and Clean Architecture. It provides a personalized learning experience with an AI Tutor, interactive learning paths, gamification, and advanced AI features like voice validation and knowledge mastery tracing.
 
 ## Features
 
@@ -30,4 +30,4 @@ IndividyaBot is a premium, AI-powered EdTech platform built with Flutter and Cle
 4. Run `flutter run`.
 
 ---
-Created by Shivay Singh
+Created by Vidya.Edu Team
